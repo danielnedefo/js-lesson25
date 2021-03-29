@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <form action="" class="input">
+    <input type="text">
+  </form>
+  <script>
+    const link = 'https://restcountries.eu/rest/v2'
+   const allCountries = fetch(`${link}/all`);
+   allCountries
+   .then(response => {
+     if(!response.ok){
+    throw new Error('Smth going wrong')
+  }
+  return response.json()
+   })
+   .then(countries =>{
+     const arrCountries = countries.map(country => {
+       const input = document.querySelector('[type="text"]')
+       input.addEventListener('input',function(){
+         findCountry(this.value)
+        //  elem.append(...arrCountries)
+       })
+     })
+   })
+
+   function findCountry(name){
+     const elem = document.createElement('ul')
+     const allCountries = fetch(`${link}/name/${name}`)
+     allCountries
+     .then(response => {
+    if(!response.ok){
+      throw new Error("Smth going wrong")
+    }
+    return response.json();
+  })
+  .then(({population,capital,languages}) => {
+    elem.insertAdjacentHTML("beforeend",`<li>${population}</li><li>${capital}</li><li>${languages}</li>`)
+  })
+  .catch(eror => elem.insertAdjacentHTML("beforeend","Такой страны нет"))
+   }
+   const input = document.querySelector('.input')
+  </script>
+</body>
+</html>

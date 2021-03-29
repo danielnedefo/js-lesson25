@@ -3,11 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+<<<<<<< Updated upstream
     <style>
         .post-list-item {
             cursor: pointer;
         }
     </style>
+=======
+    <ol id="post-list">
+    </ol>
+>>>>>>> Stashed changes
 </head>
 <body>
     <ol id="post-list">
@@ -22,6 +27,7 @@
     При клике на элемент списка под ним нужно показвать краткую информацию
     о пользователе, сделавшем этот пост, в формате "name - email".
     Получить ее можно с помощью GET-запроса по адресу
+<<<<<<< Updated upstream
     https://jsonplaceholder.typicode.com/users/userId
     */
     const postList = document.getElementById("post-list");
@@ -76,6 +82,49 @@
             }
 
         }
+=======
+    https://jsonplaceholder.typicode.com/post/users/userId
+    */
+   const postList = document.getElementById('post-list')
+const basicUrl = 'https://jsonplaceholder.typicode.com';
+const postRequest = fetch(`${basicUrl}/posts`)
+postRequest
+.then(response => {
+  if(!response.ok){
+    throw new Error('Smth going wrong')
+  }
+  return response.json()
+})
+.then(result => {
+  const arr = result.slice(0,20)
+  const postElements = arr.map(item => {
+  const element = document.createElement('li')
+  element.addEventListener('click',function(e){
+    e.preventDefault()
+    toogleUserInfo(this,item.userId)
+  })
+  element.insertAdjacentHTML("beforeend",`<h4>${item.title}</h4><p>${item.body}</p>`)
+  return element;
+  })
+  postList.append(...postElements)
+})
+.catch(eror => console.log(eror))
+
+function toogleUserInfo(elem,id){
+  const userRequest = fetch(`${basicUrl}/users/${id}`)
+  userRequest
+  .then(response => {
+    if(!response.ok){
+      throw new Error("Smth going wrong")
+    }
+    return response.json();
+  })
+  .then(({name,email}) => {
+    elem.insertAdjacentHTML('beforeend',`<p>${name} - ${email}</p>`)
+  })
+  .catch(eror => elem.insertAdjacentHTML("beforeend","Что-то пошло не так"))
+}
+>>>>>>> Stashed changes
 </script>
 </body>
 </html>

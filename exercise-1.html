@@ -4,6 +4,7 @@
     <meta charset="UTF-8">
     <title>Title</title>
     <style>
+<<<<<<< Updated upstream
         .photo-list {
             display: flex;
             flex-wrap: wrap;
@@ -36,12 +37,39 @@
             <p class="photo-list-title">accusamus beatae ad facilis cum similique qui sunt</p>
         </div> -->
     </div>
+=======
+      .photo-list{
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: space-between;
+      }
+      .photo-list-item{
+        flex: 0 1 25%;
+        margin: 10px;
+        padding: 15px;
+        border: 1px solid black;
+        border-radius: 5px;
+        text-align: center;
+      }
+      .photo-list-img{
+        max-width: 100%;
+        height: auto;
+      }
+      .photo-list-title{
+        text-align: center;
+      }
+    </style>
+</head>
+<body>
+  <div id="photos"></div>
+>>>>>>> Stashed changes
 <script>
     /*
     Выведите на экран в виде карточек в формате "изображение и подпись под ним"
     фото, полученные при GET-запросе по адресу https://jsonplaceholder.typicode.com/photos.
     Вывести нужно только первые 20 карточек.
     */
+<<<<<<< Updated upstream
 
     const photoList = document.getElementById("photos");
 
@@ -69,6 +97,27 @@
         photoList.innerHTML = "Ошибка поиска";
     })
 
+=======
+   const photolist = document.getElementById('photos')
+    const basicUrl = 'https://jsonplaceholder.typicode.com';
+    const photos = fetch(`${basicUrl}/photos`);
+    photos
+    .then(response => {
+      if(!response.ok){
+        throw new Error('Smth going wrong')
+      }
+      return response.json()
+    })
+    .then(result => {
+      const arr = result.slice(0,20);
+      const photosElemrnts = arr.map(item => `<div class = "photo-list-item">
+        <img src = '${item.thumbnailUrl}' alt = '' class = 'photo-list-img'>
+        <p class = "photo-list-title">${item.title}</p>
+        </div>`).join("");
+        photolist.insertAdjacentHTML("beforeend",photosElemrnts)
+    })
+    .catch(error => photolist.innerHTML = "Error")
+>>>>>>> Stashed changes
 </script>
 </body>
 </html>
