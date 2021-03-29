@@ -3,8 +3,16 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .post-list-item {
+            cursor: pointer;
+        }
+    </style>
 </head>
 <body>
+    <ol id="post-list">
+        
+    </ol>
 <script>
     /*
     Выведите на экран в виде списка
@@ -14,10 +22,60 @@
     При клике на элемент списка под ним нужно показвать краткую информацию
     о пользователе, сделавшем этот пост, в формате "name - email".
     Получить ее можно с помощью GET-запроса по адресу
-    https://jsonplaceholder.typicode.com/comments/userId
+    https://jsonplaceholder.typicode.com/users/userId
     */
+    const postList = document.getElementById("post-list");
+
+    const basicURL = "https://jsonplaceholder.typicode.com";
+
+    const postsRequest = fetch(`${basicURL}/posts`);
+
+    postsRequest
+        .then(response => {
+            if(!response.ok){
+                throw new Error("Что-то пошло не так")
+            }
+            return response.json()
+        })
+        .then(result => {
+            const arr = result.slice(0, 20);
+            const postElements = arr.map(item => {
+                const element = document.createElement("li");
+                element.addEventListener("click", function(e){
+                    e.preventDefault();
+                    toogleUserInfo(this, item.userId);
+                });
+                element.classList.add("post-list-item");
+                element.insertAdjacentHTML("beforeend", `<h4>${item.title}</h4>
+                                                         <p>${item.body}</p>`);
+                return element;
+            });
+            postList.append(...postElements);
+        })
+        .catch(error => postList.innerHTML = "Что-то пошло не так");
 
 
+        function toogleUserInfo(elem, id){
+            const userInfo = elem.querySelector(".post-list-user");
+            if(userInfo){
+                userInfo.remove();
+            }
+            else {
+                const userRequest = fetch(`${basicURL}/users/${id}`);
+                userRequest
+                    .then(response => {
+                        if(!response.ok){
+                            throw new Error("Что-то пошло не так");
+                        }
+                        return response.json();
+                    })
+                    .then(({name, email}) => {
+                        elem.insertAdjacentHTML("beforeend", `<p class="post-list-user">${name} - ${email}</p>`)
+                    })
+                    .catch(error => elem.insertAdjacentHTML("beforeend", "Что-то пошло не так"))
+            }
+
+        }
 </script>
 </body>
 </html>

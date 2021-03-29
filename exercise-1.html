@@ -3,14 +3,72 @@
 <head>
     <meta charset="UTF-8">
     <title>Title</title>
+    <style>
+        .photo-list {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+        }
+
+        .photo-list-item {
+            flex: 0 1 25%;
+            margin: 10px;
+            padding: 15px;
+            border: 1px solid black;
+            border-radius: 5px;
+            text-align: center;
+        }
+
+        .photo-list-img {
+            max-width: 100%;
+            height: auto;
+        }
+
+        .photo-list-title {
+            text-align: center;
+        }
+    </style>
 </head>
 <body>
+    <div id="photos" class="photo-list">
+        <!-- <div class="photo-list-item">
+            <img src="https://via.placeholder.com/150/92c952" alt="" class="photo-list-img" />
+            <p class="photo-list-title">accusamus beatae ad facilis cum similique qui sunt</p>
+        </div> -->
+    </div>
 <script>
     /*
     Выведите на экран в виде карточек в формате "изображение и подпись под ним"
     фото, полученные при GET-запросе по адресу https://jsonplaceholder.typicode.com/photos.
     Вывести нужно только первые 20 карточек.
     */
+
+    const photoList = document.getElementById("photos");
+
+    const basicURL = "https://jsonplaceholder.typicode.com";
+
+   const photosRequest = fetch(`${basicURL}/photos`);
+
+   photosRequest
+    .then(response => {
+        if(!response.ok){
+            throw new Error("Что-то пошло не так");
+        }
+        return response.json();
+    })
+    .then(result => {
+        const arr = result.slice(0, 20);
+        const photoElements = arr.map(item => `
+        <div class="photo-list-item">
+            <img src="${item.thumbnailUrl}" alt="" class="photo-list-img" />
+            <p class="photo-list-title">${item.title}</p>
+        </div>`).join("");
+        photoList.insertAdjacentHTML("beforeend", photoElements);
+    })
+    .catch(error => {
+        photoList.innerHTML = "Ошибка поиска";
+    })
+
 </script>
 </body>
 </html>
